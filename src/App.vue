@@ -1,14 +1,12 @@
 <script>
-import Navbar from './components/Navbar.vue';
-import Title from './components/Title.vue';
-import LeftCube from './components/LeftCube.vue';
-import RightCube from './components/RightCube.vue';
+import Navbar from './components/componentHeader/Navbar.vue';
+import AppMain from './components/componentMain/AppMain.vue';
+
 export default{
   components:{
     Navbar,
-    Title,
-    LeftCube,
-    RightCube,
+    AppMain
+    
   }
 }
 </script>
@@ -17,23 +15,10 @@ export default{
 
   <body>
    
-    <Navbar  />
-    <hr>
-    <main>
-      <Title />
-
-      <section class="container">
-        <div class="row justify-content-around">
-          <LeftCube/>
-
-          <RightCube/>
-        </div>
-
-      </section>
-    </main>
-    <footer>
-
-    </footer>
+    <Navbar/>
+    
+    <AppMain/>
+    
 
   </body>
  
@@ -45,5 +30,6 @@ body{
   min-width: 100vw;
   min-height: 100vh;
 }
+
 
 </style>
