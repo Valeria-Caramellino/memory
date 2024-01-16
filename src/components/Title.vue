@@ -30,7 +30,7 @@ export default{
 
 <style lang="scss" scoped>
 .col-11{
-  height: 4rem;
+  height: 2rem;
   .col-4.d-flex{
     //background-color: aqua;
     height: 100%;
