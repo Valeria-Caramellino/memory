@@ -1,105 +1,94 @@
 <script>
+import store from '../../../../../store';
+
 export default {
-    name: 'Simbols',
-    data() {
-        return {
-            icon1: [
-                {
-                    name: 'goccia',
-                    text: 'fa-solid fa-droplet'
-                },
-                {
-                    name: 'chiave inglese',
-                    text: 'fa-solid fa-wrench'
-                },
-                {
-                    name: 'fulmine',
-                    text: 'fa-solid fa-bolt-lightning'
-                },
-                {
-                    name: 'orologio',
-                    text: 'fa-solid fa-clock'
-                },
+  name: 'Simbols',
+  data() {
+    return {
+      store,
+    };
+  },
+  methods: {
+    selectSymbol(name) {
+      store.userChoices.push(name);
+      const lastIndex = store.userChoices.length - 1;
 
+      if (store.userChoices[lastIndex] !== store.computerChoices[lastIndex].name) {
+        this.handleGameOver(`Gioco finito! Hai sbagliato la scelta ${lastIndex + 1}`);
+      } else {
+        this.handleCorrectChoice(`Scelta ${lastIndex + 1} corretta!`);
 
-            ],
-            icon2: [
-                {
-                    name: 'scatola',
-                    text: 'fa-solid fa-box-archive'
-                },
-                {
-                    name: 'fantasma',
-                    text: 'fa-solid fa-ghost'
-                },
-                {
-                    name: 'ok',
-                    text: 'fa-solid fa-thumbs-up'
-                },
+        if (store.userChoices.length === store.computerChoices.length) {
+          if (this.checkUserChoices()) {
+            this.handleGameOutcome("Hai vinto!");
+          } else {
+            this.handleGameOutcome("Hai Perso!");
+          }
 
-            ],
-            icon3: [
-                {
-                    name: 'casa',
-                    text: 'fa-solid fa-house'
-                },
-                {
-                    name: 'nota',
-                    text: 'fa-solid fa-music'
-                },
-                {
-                    name: 'pizza',
-                    text: 'fa-solid fa-pizza-slice'
-                },
-                {
-                    name: 'telefono',
-                    text: 'fa-solid fa-phone'
-                },
-            ]
+          store.userChoices = [];
         }
-    }
-}
+      }
+    },
+    checkUserChoices() {
+      for (let i = 0; i < store.userChoices.length; i++) {
+        if (store.userChoices[i] !== store.computerChoices[i].name) {
+          this.handleGameOver(`Gioco finito! Hai sbagliato la scelta ${i + 1}.`);
+          return false;
+        }
+        this.handleCorrectChoice(`Scelta ${i + 1} corretta!`);
+      }
+
+      this.handleGameOutcome("Complimenti! Hai indovinato tutte le scelte.");
+      return true;
+    },
+    handleGameOver(message) {
+      this.showGameMessage(message);
+      this.resetGameAfterDelay();
+    },
+    handleCorrectChoice(message) {
+      this.showGameMessage(message);
+    },
+    handleGameOutcome(message) {
+      this.showGameMessage(message);
+      this.resetGameAfterDelay();
+    },
+    showGameMessage(message) {
+      this.store.gameMessage = message;
+      setTimeout(() => {
+        this.store.gameMessage = "";
+      }, 2000);
+    },
+    resetGameAfterDelay() {
+      setTimeout(() => {
+        this.store.gameInProgress = false;
+      }, 2000);
+    },
+  },
+};
 </script>
+
 <template>
-    <section class="container">
-        <div class="row justify-content-center">
-            <div class="col-5">
-
-                <!-- prima riga -->
-                <div class="row justify-content-center ">
-        
-                    <div v-for="item in icon1" class="esagono d-flex align-items-center justify-content-center">
-        
-                        <i :class="item.text"></i>
-                    </div>
-                </div>
-                <!-- seconda riga -->
-                <div class="row justify-content-center ">
-        
-                    <div v-for="item in icon2" class="esagono centrale d-flex align-items-center justify-content-center">
-        
-                        <i :class="item.text"></i>
-                    </div>
-                </div>
-                <!-- terza riga -->
-                <div class="row justify-content-center">
-        
-                    <div v-for="item in icon3" class="esagono d-flex align-items-center justify-content-center">
-        
-                        <i :class="item.text"></i>
-                    </div>
-                </div>
-            </div>
+  <section class="container">
+    <div class="row justify-content-center">
+      <div class="col-5">
+        <div v-for="group in [store.icon1, store.icon2, store.icon3]" :key="group[0].name" class="row justify-content-center">
+          <div v-for="item in group" :key="item.name" class="esagono d-flex align-items-center justify-content-center" @click="selectSymbol(item.name)">
+            <i :class="item.text"></i>
+          </div>
         </div>
-
-    </section>
+      </div>
+    </div>
+  </section>
 </template>
+
+
 <style lang="scss" scoped>
-.col-5{
+.col-5 {
     background-color: darkgray;
     border: 2px solid black;
     border-radius: 10px;
 }
+
 .esagono {
     width: 70px;
     height: 40px;
@@ -113,9 +102,11 @@ export default {
     -o-transform: rotate(180deg);
     transform: rotate(180deg);
     border: 1px solid lightgray;
-    i{
+
+    i {
         font-size: 30px;
     }
+
     &:hover {
         cursor: pointer;
 
@@ -157,4 +148,5 @@ export default {
     border-left: 35px solid transparent;
     border-right: 35px solid transparent;
 
-}</style>
+}
+</style>
